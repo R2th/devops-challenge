@@ -15,7 +15,6 @@ import (
 	"syscall"
 
 	"github.com/alecthomas/kingpin/v2"
-	"github.com/go-kit/log/level"
 	"github.com/prometheus/client_golang/prometheus"
 	versioncollector "github.com/prometheus/client_golang/prometheus/collectors/version"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -51,8 +50,7 @@ func run() int {
 
 	beURL, err := computeExternalURL(*externalURL, ":9915")
 	if err != nil {
-		level.Error(logger).Log("msg", "failed to determine external URL", "err", err)
-		return 1
+		panic(err)
 	}
 
 	// Default -web.route-prefix to path of -web.external-url.
@@ -82,7 +80,7 @@ func run() int {
 
 	go func() {
 		if err := web.ListenAndServe(srv, toolkitFlags, logger); err != nil {
-			level.Error(logger).Log("msg", "Error starting HTTP server", "err", err)
+			// level.Error(logger).Log("msg", "Error starting HTTP server", "err", err)
 			close(srvc)
 		}
 	}()
@@ -90,7 +88,7 @@ func run() int {
 	for {
 		select {
 		case <-term:
-			level.Info(logger).Log("msg", "Received SIGTERM, exiting gracefully...")
+			// level.Info(logger).Log("msg", "Received SIGTERM, exiting gracefully...")
 			return 0
 		case <-srvc:
 			return 1

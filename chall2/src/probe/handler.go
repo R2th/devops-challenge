@@ -173,25 +173,25 @@ func Handler(w http.ResponseWriter, r *http.Request, c *config.Config, timeoutOf
 
 }
 
-func getTimeout(r *http.Request, module config.Module, offset float64) (timeoutSeconds float64, err error) {
-	// If a timeout is configured via the Prometheus header, add it to the request.
-	if v := r.Header.Get("X-Prometheus-Scrape-Timeout-Seconds"); v != "" {
-		var err error
-		timeoutSeconds, err = strconv.ParseFloat(v, 64)
-		if err != nil {
-			return 0, err
-		}
-	}
-	if timeoutSeconds == 0 {
-		timeoutSeconds = 120
-	}
+// func getTimeout(r *http.Request, module config.Module, offset float64) (timeoutSeconds float64, err error) {
+// 	// If a timeout is configured via the Prometheus header, add it to the request.
+// 	if v := r.Header.Get("X-Prometheus-Scrape-Timeout-Seconds"); v != "" {
+// 		var err error
+// 		timeoutSeconds, err = strconv.ParseFloat(v, 64)
+// 		if err != nil {
+// 			return 0, err
+// 		}
+// 	}
+// 	if timeoutSeconds == 0 {
+// 		timeoutSeconds = 120
+// 	}
 
-	var maxTimeoutSeconds = timeoutSeconds - offset
-	if module.Timeout.Seconds() < maxTimeoutSeconds && module.Timeout.Seconds() > 0 || maxTimeoutSeconds < 0 {
-		timeoutSeconds = module.Timeout.Seconds()
-	} else {
-		timeoutSeconds = maxTimeoutSeconds
-	}
+// 	var maxTimeoutSeconds = timeoutSeconds - offset
+// 	if module.Timeout.Seconds() < maxTimeoutSeconds && module.Timeout.Seconds() > 0 || maxTimeoutSeconds < 0 {
+// 		timeoutSeconds = module.Timeout.Seconds()
+// 	} else {
+// 		timeoutSeconds = maxTimeoutSeconds
+// 	}
 
-	return timeoutSeconds, nil
-}
+// 	return timeoutSeconds, nil
+// }
